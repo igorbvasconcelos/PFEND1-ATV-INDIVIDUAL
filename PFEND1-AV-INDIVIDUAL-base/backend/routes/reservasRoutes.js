@@ -36,10 +36,6 @@ let reservas = [
 ];
 
 
-// ======================================================
-// FUNÇÃO DE VALIDAÇÃO
-// ======================================================
-
 function validarReserva(dados) {
 
     const erros = [];
@@ -55,17 +51,12 @@ function validarReserva(dados) {
     } = dados;
 
 
-    // CLIENTE
-
     if (
         typeof cliente !== "string" ||
         cliente.trim() === ""
     ) {
         erros.push("Cliente é obrigatório");
     }
-
-
-    // TELEFONE
 
     if (
         typeof telefone !== "string" ||
@@ -89,8 +80,6 @@ function validarReserva(dados) {
 
     }
 
-
-    // DATA
 
     if (
         typeof data !== "string" ||
@@ -132,9 +121,6 @@ function validarReserva(dados) {
 
     }
 
-
-    // HORÁRIO
-
     if (
         typeof horario !== "string" ||
         horario.trim() === ""
@@ -160,8 +146,6 @@ function validarReserva(dados) {
     }
 
 
-    // PESSOAS
-
     const quantidadePessoas = Number(pessoas);
 
     if (
@@ -178,9 +162,6 @@ function validarReserva(dados) {
 
     }
 
-
-    // OBSERVAÇÃO
-
     if (
         observacao !== undefined &&
         typeof observacao !== "string"
@@ -189,9 +170,6 @@ function validarReserva(dados) {
         erros.push("Observação deve ser um texto");
 
     }
-
-
-    // STATUS
 
     const statusPermitidos = [
         "Pendente",
@@ -215,11 +193,6 @@ function validarReserva(dados) {
 
 }
 
-
-// ======================================================
-// LISTAR RESERVAS
-// ======================================================
-
 reservaRoutes.get("/", (req, res) => {
 
     res.status(200).json({
@@ -228,11 +201,6 @@ reservaRoutes.get("/", (req, res) => {
     });
 
 });
-
-
-// ======================================================
-// CRIAR RESERVA
-// ======================================================
 
 reservaRoutes.post("/", (req, res) => {
 
@@ -305,11 +273,6 @@ reservaRoutes.post("/", (req, res) => {
 
 });
 
-
-// ======================================================
-// BUSCAR RESERVA POR ID
-// ======================================================
-
 reservaRoutes.get("/:id", (req, res) => {
 
     const id = Number(req.params.id);
@@ -358,11 +321,6 @@ reservaRoutes.get("/:id", (req, res) => {
     });
 
 });
-
-
-// ======================================================
-// EDITAR RESERVA
-// ======================================================
 
 reservaRoutes.put("/:id", (req, res) => {
 
@@ -465,11 +423,6 @@ reservaRoutes.put("/:id", (req, res) => {
     });
 
 });
-
-
-// ======================================================
-// EXCLUIR RESERVA
-// ======================================================
 
 reservaRoutes.delete("/:id", (req, res) => {
 

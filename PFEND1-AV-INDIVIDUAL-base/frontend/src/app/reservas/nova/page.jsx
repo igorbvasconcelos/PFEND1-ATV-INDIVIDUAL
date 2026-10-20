@@ -1,10 +1,10 @@
+
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function NovaReserva() {
-
   const router = useRouter();
 
   const [cliente, setCliente] = useState("");
@@ -15,9 +15,7 @@ export default function NovaReserva() {
   const [observacao, setObservacao] = useState("");
   const [status, setStatus] = useState("Pendente");
 
-
   async function adicionarReserva(event) {
-
     event.preventDefault();
 
     const novaReserva = {
@@ -31,16 +29,13 @@ export default function NovaReserva() {
     };
 
     try {
-
       const resposta = await fetch(
         "http://localhost:3001/reservas",
         {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json"
           },
-
           body: JSON.stringify(novaReserva)
         }
       );
@@ -49,263 +44,155 @@ export default function NovaReserva() {
         throw new Error("Erro ao criar reserva");
       }
 
-      const resultado = await resposta.json();
-
-      console.log(resultado);
-
       alert("Reserva criada com sucesso!");
 
       router.push("/");
 
     } catch (erro) {
-
-      console.error(erro);
-
+      console.log(erro);
       alert("Erro ao criar a reserva.");
-
     }
-
   }
 
-
   return (
+    <main className="container mt-5">
 
-    <main className="container py-5">
+      <button
+        className="btn btn-secondary mb-3"
+        onClick={() => router.push("/")}
+      >
+        Voltar
+      </button>
 
+      <h1>Nova Reserva</h1>
 
-      <div className="mb-4">
+      <p>Preencha os dados da reserva.</p>
 
-        <button
-          type="button"
-          className="btn btn-outline-secondary mb-3"
-          onClick={() => router.push("/")}
-        >
-          ← Voltar
-        </button>
-
-        <h1 className="fw-bold">
-          Nova Reserva
-        </h1>
-
-        <p className="text-secondary">
-          Cadastre uma nova reserva para o restaurante.
-        </p>
-
-      </div>
-
-
-
-      <div className="card border-0 shadow-sm">
-
-        <div className="card-body p-4 p-md-5">
+      <div className="card">
+        <div className="card-body">
 
           <form onSubmit={adicionarReserva}>
 
-            <div className="row g-4">
+            <div className="mb-3">
+              <label className="form-label">
+                Nome do cliente
+              </label>
 
-
-              {/* CLIENTE */}
-
-              <div className="col-md-6">
-
-                <label
-                  htmlFor="cliente"
-                  className="form-label fw-semibold"
-                >
-                  Nome do cliente
-                </label>
-
-                <input
-                  id="cliente"
-                  type="text"
-                  className="form-control"
-                  placeholder="Digite o nome do cliente"
-                  value={cliente}
-                  onChange={(e) => setCliente(e.target.value)}
-                  required
-                />
-
-              </div>
-
-
-
-              <div className="col-md-6">
-
-                <label
-                  htmlFor="telefone"
-                  className="form-label fw-semibold"
-                >
-                  Telefone
-                </label>
-
-                <input
-                  id="telefone"
-                  type="tel"
-                  className="form-control"
-                  placeholder="(11) 99999-9999"
-                  value={telefone}
-                  onChange={(e) => setTelefone(e.target.value)}
-                  required
-                />
-
-              </div>
-
-
-              <div className="col-md-4">
-
-                <label
-                  htmlFor="data"
-                  className="form-label fw-semibold"
-                >
-                  Data
-                </label>
-
-                <input
-                  id="data"
-                  type="date"
-                  className="form-control"
-                  value={data}
-                  onChange={(e) => setData(e.target.value)}
-                  required
-                />
-
-              </div>
-
-
-
-              <div className="col-md-4">
-
-                <label
-                  htmlFor="horario"
-                  className="form-label fw-semibold"
-                >
-                  Horário
-                </label>
-
-                <input
-                  id="horario"
-                  type="time"
-                  className="form-control"
-                  value={horario}
-                  onChange={(e) => setHorario(e.target.value)}
-                  required
-                />
-
-              </div>
-
-
-              <div className="col-md-4">
-
-                <label
-                  htmlFor="pessoas"
-                  className="form-label fw-semibold"
-                >
-                  Quantidade de pessoas
-                </label>
-
-                <input
-                  id="pessoas"
-                  type="number"
-                  min="1"
-                  className="form-control"
-                  placeholder="Ex: 4"
-                  value={pessoas}
-                  onChange={(e) => setPessoas(e.target.value)}
-                  required
-                />
-
-              </div>
-
-
-
-              <div className="col-md-8">
-
-                <label
-                  htmlFor="observacao"
-                  className="form-label fw-semibold"
-                >
-                  Observação
-                </label>
-
-                <textarea
-                  id="observacao"
-                  className="form-control"
-                  rows="4"
-                  placeholder="Ex: Mesa próxima à janela..."
-                  value={observacao}
-                  onChange={(e) => setObservacao(e.target.value)}
-                />
-
-              </div>
-
-              <div className="col-md-4">
-
-                <label
-                  htmlFor="status"
-                  className="form-label fw-semibold"
-                >
-                  Status
-                </label>
-
-                <select
-                  id="status"
-                  className="form-select"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-
-                  <option value="Pendente">
-                    Pendente
-                  </option>
-
-                  <option value="Confirmada">
-                    Confirmada
-                  </option>
-
-                  <option value="Cancelada">
-                    Cancelada
-                  </option>
-
-                </select>
-
-              </div>
-
-
-
-              <div className="col-12">
-
-                <hr className="my-2" />
-
-                <div className="d-flex justify-content-end gap-2">
-
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => router.push("/")}
-                  >
-                    Cancelar
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="btn btn-warning fw-bold"
-                  >
-                    + Adicionar Reserva
-                  </button>
-
-                </div>
-
-              </div>
-
+              <input
+                type="text"
+                className="form-control"
+                value={cliente}
+                onChange={(e) => setCliente(e.target.value)}
+                required
+              />
             </div>
+
+            <div className="mb-3">
+              <label className="form-label">
+                Telefone
+              </label>
+
+              <input
+                type="tel"
+                className="form-control"
+                value={telefone}
+                onChange={(e) => setTelefone(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">
+                Data
+              </label>
+
+              <input
+                type="date"
+                className="form-control"
+                value={data}
+                onChange={(e) => setData(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">
+                Horário
+              </label>
+
+              <input
+                type="time"
+                className="form-control"
+                value={horario}
+                onChange={(e) => setHorario(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">
+                Quantidade de pessoas
+              </label>
+
+              <input
+                type="number"
+                min="1"
+                className="form-control"
+                value={pessoas}
+                onChange={(e) => setPessoas(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">
+                Observação
+              </label>
+
+              <textarea
+                className="form-control"
+                rows="3"
+                value={observacao}
+                onChange={(e) => setObservacao(e.target.value)}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">
+                Status
+              </label>
+
+              <select
+                className="form-select"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <option value="Pendente">Pendente</option>
+                <option value="Confirmada">Confirmada</option>
+                <option value="Cancelada">Cancelada</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-warning me-2"
+            >
+              Cadastrar reserva
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => router.push("/")}
+            >
+              Cancelar
+            </button>
 
           </form>
 
         </div>
-
       </div>
 
     </main>
-
   );
 }

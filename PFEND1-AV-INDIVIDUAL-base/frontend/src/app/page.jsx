@@ -1,369 +1,180 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-function App() {
-
+export default function App() {
   const [reservas, setReservas] = useState([]);
-
   const router = useRouter();
 
   useEffect(() => {
-
     fetch("http://localhost:3001/reservas")
-      .then(response => response.json())
-      .then(data => {
-        setReservas(data.dados);
+      .then((resposta) => resposta.json())
+      .then((dados) => {
+        setReservas(dados.dados);
       })
-      .catch(error => {
-        console.error("Erro ao buscar reservas:", error);
+      .catch((erro) => {
+        console.log("Erro ao buscar reservas:", erro);
       });
-
   }, []);
-
 
   function adicionarReserva() {
     router.push("/reservas/nova");
   }
 
-
   function editarReserva(id) {
-    router.push(`/reservas/${id}/editar`);
+    router.push("/reservas/" + id + "/editar");
   }
 
-
   async function removerReserva(id) {
-
     const confirmar = window.confirm(
-      "Tem certeza que deseja remover esta reserva?"
+      "Deseja realmente remover esta reserva?"
     );
 
-    if (!confirmar) {
+    if (confirmar === false) {
       return;
     }
 
     try {
-
-      const response = await fetch(
-        `http://localhost:3001/reservas/${id}`,
+      const resposta = await fetch(
+        "http://localhost:3001/reservas/" + id,
         {
           method: "DELETE"
         }
       );
 
-      if (!response.ok) {
+      if (!resposta.ok) {
         throw new Error("Erro ao remover reserva");
       }
 
       setReservas(
-        reservas.filter(reserva => reserva.id !== id)
+        reservas.filter((reserva) => reserva.id !== id)
       );
 
-    } catch (error) {
+      alert("Reserva removida com sucesso!");
 
-      console.error(error);
-
-      alert("Não foi possível remover a reserva.");
-
+    } catch (erro) {
+      console.log(erro);
+      alert("Erro ao remover reserva.");
     }
-
   }
 
-
   return (
+    <main className="container mt-5">
 
-    <main className="container py-5">
+      <h1>Reservas do Restaurante</h1>
 
-      {/* CABEÇALHO */}
+      <p>Gerencie as reservas do restaurante.</p>
 
-      <div className="d-flex justify-content-between align-items-center mb-5">
+      <button
+        className="btn btn-warning mb-4"
+        onClick={adicionarReserva}
+      >
+        Nova reserva
+      </button>
 
-        <div>
+      <div className="row mb-4">
 
-          <p className="text-uppercase text-warning fw-bold mb-1">
-            Restaurante
-          </p>
-
-          <h1 className="fw-bold mb-1">
-            Reservas
-          </h1>
-
-          <p className="text-secondary mb-0">
-            Gerencie as reservas do seu restaurante
-          </p>
-
+        <div className="col-md-4 mb-3">
+          <div className="card">
+            <div className="card-body">
+              <h5>Total de reservas</h5>
+              <h2>{reservas.length}</h2>
+            </div>
+          </div>
         </div>
 
-        <button
-          className="btn btn-warning fw-bold"
-          onClick={adicionarReserva}
-        >
-          + Nova reserva
-        </button>
-
-      </div>
-
-
-      <div className="row g-4 mb-5">
-
-        <div className="col-md-4">
-
-          <div className="card border-0 shadow-sm h-100">
-
-            <div className="card-body d-flex align-items-center gap-3">
-
-              <div className="fs-2">
-                🍽️
-              </div>
-
-              <div>
-
-                <p className="text-secondary mb-0">
-                  Total de reservas
-                </p>
-
-                <h3 className="fw-bold mb-0">
-                  {reservas.length}
-                </h3>
-
-              </div>
-
+        <div className="col-md-4 mb-3">
+          <div className="card">
+            <div className="card-body">
+              <h5>Confirmadas</h5>
+              <h2>
+                {reservas.filter(
+                  (reserva) => reserva.status === "Confirmada"
+                ).length}
+              </h2>
             </div>
-
           </div>
-
         </div>
 
-
-        <div className="col-md-4">
-
-          <div className="card border-0 shadow-sm h-100">
-
-            <div className="card-body d-flex align-items-center gap-3">
-
-              <div className="fs-2">
-                ✅
-              </div>
-
-              <div>
-
-                <p className="text-secondary mb-0">
-                  Confirmadas
-                </p>
-
-                <h3 className="fw-bold mb-0">
-
-                  {
-                    reservas.filter(
-                      reserva => reserva.status === "Confirmada"
-                    ).length
-                  }
-
-                </h3>
-
-              </div>
-
+        <div className="col-md-4 mb-3">
+          <div className="card">
+            <div className="card-body">
+              <h5>Pendentes</h5>
+              <h2>
+                {reservas.filter(
+                  (reserva) => reserva.status === "Pendente"
+                ).length}
+              </h2>
             </div>
-
           </div>
-
-        </div>
-
-
-        <div className="col-md-4">
-
-          <div className="card border-0 shadow-sm h-100">
-
-            <div className="card-body d-flex align-items-center gap-3">
-
-              <div className="fs-2">
-                ⏳
-              </div>
-
-              <div>
-
-                <p className="text-secondary mb-0">
-                  Pendentes
-                </p>
-
-                <h3 className="fw-bold mb-0">
-
-                  {
-                    reservas.filter(
-                      reserva => reserva.status === "Pendente"
-                    ).length
-                  }
-
-                </h3>
-
-              </div>
-
-            </div>
-
-          </div>
-
         </div>
 
       </div>
 
-
-
-      <div className="mb-4">
-
-        <h2 className="fw-bold mb-1">
-          Reservas cadastradas
-        </h2>
-
-        <p className="text-secondary">
-          Confira os detalhes das reservas
-        </p>
-
-      </div>
-
-
-
+      <h2>Reservas cadastradas</h2>
 
       {reservas.length === 0 ? (
 
-        <div className="card border-0 shadow-sm text-center p-5">
-
-          <div className="fs-1 mb-3">
-            🍽️
-          </div>
-
-          <h4>
-            Nenhuma reserva encontrada
-          </h4>
-
-          <p className="text-secondary">
-            Cadastre a primeira reserva para começar.
-          </p>
-
-          <div>
-
-            <button
-              className="btn btn-warning fw-bold"
-              onClick={adicionarReserva}
-            >
-              + Adicionar reserva
-            </button>
-
-          </div>
-
-        </div>
+        <p>Nenhuma reserva encontrada.</p>
 
       ) : (
 
-        <div className="row g-4">
+        <div className="row">
 
-          {reservas.map(reserva => (
+          {reservas.map((reserva) => (
 
-            <div
-              className="col-lg-4 col-md-6"
-              key={reserva.id}
-            >
+            <div className="col-md-4 mb-3" key={reserva.id}>
 
-              <div className="card border-0 shadow-sm h-100">
-
+              <div className="card">
                 <div className="card-body">
 
+                  <h5>Reserva #{reserva.id}</h5>
 
-                  <div className="d-flex justify-content-between align-items-start mb-4">
+                  <h4>{reserva.cliente}</h4>
 
-                    <div>
+                  <p>
+                    <strong>Data:</strong> {reserva.data}
+                  </p>
 
-                      <small className="text-secondary">
-                        Reserva #{reserva.id}
-                      </small>
+                  <p>
+                    <strong>Horário:</strong> {reserva.horario}
+                  </p>
 
-                      <h4 className="fw-bold mb-0">
-                        {reserva.cliente}
-                      </h4>
+                  <p>
+                    <strong>Pessoas:</strong> {reserva.pessoas}
+                  </p>
 
-                    </div>
+                  <p>
+                    <strong>Telefone:</strong> {reserva.telefone}
+                  </p>
 
-
-                    <span
-                      className={`badge ${
-                        reserva.status === "Confirmada"
-                          ? "text-bg-success"
-                          : reserva.status === "Cancelada"
-                            ? "text-bg-danger"
-                            : "text-bg-warning"
-                      }`}
-                    >
-                      {reserva.status}
-                    </span>
-
-                  </div>
-
-
-
-                  <div className="mb-3">
-
-                    <p className="mb-2">
-                      📅 <strong>Data:</strong>{" "}
-                      {reserva.data}
-                    </p>
-
-                    <p className="mb-2">
-                      🕐 <strong>Horário:</strong>{" "}
-                      {reserva.horario}
-                    </p>
-
-                    <p className="mb-2">
-                      👥 <strong>Pessoas:</strong>{" "}
-                      {reserva.pessoas}
-                    </p>
-
-                    <p className="mb-2">
-                      📞 <strong>Telefone:</strong>{" "}
-                      {reserva.telefone}
-                    </p>
-
-                  </div>
-
-
-                  {/* OBSERVAÇÃO */}
+                  <p>
+                    <strong>Status:</strong> {reserva.status}
+                  </p>
 
                   {reserva.observacao && (
-
-                    <div className="bg-light rounded p-3 mb-3">
-
-                      <small className="text-secondary">
-                        Observação
-                      </small>
-
-                      <p className="mb-0 mt-1">
-                        {reserva.observacao}
-                      </p>
-
-                    </div>
-
+                    <p>
+                      <strong>Observação:</strong> {reserva.observacao}
+                    </p>
                   )}
 
+                  <button
+                    className="btn btn-primary me-2 mb-2"
+                    onClick={() => editarReserva(reserva.id)}
+                  >
+                    Editar
+                  </button>
 
-                  <div className="d-flex gap-2">
-
-                    <button
-                      className="btn btn-outline-primary flex-fill"
-                      onClick={() => editarReserva(reserva.id)}
-                    >
-                      Editar
-                    </button>
-
-                    <button
-                      className="btn btn-outline-danger flex-fill"
-                      onClick={() => removerReserva(reserva.id)}
-                    >
-                      Remover
-                    </button>
-
-                  </div>
+                  <button
+                    className="btn btn-danger mb-2"
+                    onClick={() => removerReserva(reserva.id)}
+                  >
+                    Remover
+                  </button>
 
                 </div>
-
               </div>
 
             </div>
@@ -375,9 +186,5 @@ function App() {
       )}
 
     </main>
-
   );
-
 }
-
-export default App;
