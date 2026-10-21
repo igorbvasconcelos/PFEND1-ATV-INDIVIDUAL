@@ -40,9 +40,15 @@ export default function NovaReserva() {
         }
       );
 
-      if (!resposta.ok) {
-        throw new Error("Erro ao criar reserva");
-      }
+    const resultado = await resposta.json();
+
+    if (!resposta.ok) {
+      const mensagens = resultado.erros || [
+        resultado.erro || resultado.mensagem || "Erro ao criar reserva"
+      ];
+
+      throw new Error(mensagens.join("\n"));
+    }
 
       alert("Reserva criada com sucesso!");
 
