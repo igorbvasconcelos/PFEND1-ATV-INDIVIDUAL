@@ -68,14 +68,12 @@ function validarReserva(dados) {
     } else {
 
         const telefoneValido =
-            /^\(\d{2}\)\s?\d{4,5}-\d{4}$/.test(
-                telefone.trim()
-            );
+        /^\d{10,11}$/.test(
+            telefone.replace(/\D/g, "")
+        );
 
         if (!telefoneValido) {
-            erros.push(
-                "Telefone deve estar no formato (11) 99999-9999"
-            );
+        erros.push("Telefone inválido");
         }
 
     }
